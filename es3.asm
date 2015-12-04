@@ -32,55 +32,48 @@ __CONFIG _CP_OFF & _WDT_OFF & _BODEN_OFF & _PWRTE_ON & _HS_OSC & _WRT_OFF & _LVP
 ;*******************************************************************
 ;
 
-counter10us             equ             h'20'
 
 
-;*******************************************************************
-;*******************************************************************
-;
-; Variable declarations  : User RAM area starts at location h'20' for PIC16F877a
-; =====================
-;
-        w_temp          equ     h'7D'           ; variable used for context saving
-        status_temp     equ     h'7E'           ; variable used for context saving
-        pclath_temp     equ     h'7F'           ; variable used for context saving
+
+
+;**************************************************************
+; Variable declarations
+; User RAM area starts at location h'20' for PIC16F877a
+;**************************************************************
+        ; Variables used for context saving
+        w_temp          equ     h'7D'
+        status_temp     equ     h'7E'
+        pclath_temp     equ     h'7F'
 
         pwm_counter     equ     h'22'
+        counter10us     equ     h'20'
 
-;
-;*******************************************************************
-;*******************************************************************
-; Initial system vector.
-;
+;**************************************************************
+; Initial system vector
+;**************************************************************
+
         org     h'00'                   ; initialise system restart vector
         clrf    STATUS
         clrf    PCLATH                  ; needed for TinyBootloader functionality
         goto    start
 
-;*******************************************************************
-;*******************************************************************
-; interrupt vector
-;
+;**************************************************************
+; Interrupt vector
+;**************************************************************
+
         org     h'04'
         goto    int_routine
 
-;*******************************************************************
-;*******************************************************************
-;
-; System subroutines.
-;
-        org     h'05'           ; start of program space
-;
-;*******************************************************************
-;*******************************************************************
-; System functions
-;*******************************************************************
-;
-;* Init : initialise I/O ports and variables
-;  ====
-; Notes
-;      ............................
-;
+;**************************************************************
+; Start of program space
+;**************************************************************
+
+        org     h'05'
+
+;**************************************************************
+; Initialize program space and variables
+;**************************************************************
+
 Init
         bsf     STATUS, RP0        ; enable page 1 register set
         bcf     STATUS, RP1
@@ -117,9 +110,9 @@ int_routine
         movwf   status_temp       ; save off contents of STATUS register
         movf    PCLATH,w          ; move pclath register into w register
         movwf   pclath_temp       ; save off contents of PCLATH register
-;********************************
-; Your interrupt code goes HERE
-;********************************
+        ;********************************
+        ; Your interrupt code goes HERE
+        ;********************************
         movf    pclath_temp,w     ; retrieve copy of PCLATH register
         movwf   PCLATH            ; restore pre-isr PCLATH register contents
         movf    status_temp,w     ; retrieve copy of STATUS register
@@ -157,7 +150,7 @@ return
 ; work out what LEDs to turn on.
 ; For each LED that is set to on, the pwm value counter is
 ; incremented.
-; The PWM counter is then set to a value between 0 and 8, which
+; The PWM counter is then set to a value between 0 and 7, which
 ; is later used to work out the speaker frequency.
 ; *************************************************************
 ; Outputs: pwm_counter
@@ -242,8 +235,6 @@ set_leds_prepare_speaker:
         btfsc   STATUS,      0
         incf    pwm_counter, 1
 
-        btfsc   STATUS,      0
-        incf    pwm_counter, 1
 
         return
 
@@ -293,11 +284,6 @@ set_pwm_frequency:
         call    pwm7
 
         movlw   d'7'
-        xorwf   pwm_counter,  0
-        btfsc   STATUS,       2
-        call    pwm8
-
-        movlw   d'8'
         xorwf   pwm_counter,  0
         btfsc   STATUS,       2
         call    pwm8
