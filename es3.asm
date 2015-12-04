@@ -1,7 +1,9 @@
+;Cameron A. Craig cac30@hw.ac.uk H00131274
+
 title     "Assignment3: ADC and PWM interfacing."
 list      p=16f877a
 include   "p16f877a.inc"
-
+;         Cameron A. Craig cac30@hw.ac.uk H00131274
 ;**************************************************************
 ; '__CONFIG' directive is used to embed configuration
 ; data within .asm file. The labels following the directive
@@ -60,13 +62,6 @@ __CONFIG _CP_OFF & _WDT_OFF & _BODEN_OFF & _PWRTE_ON & _HS_OSC & _WRT_OFF & _LVP
         goto    start
 
 ;**************************************************************
-; Interrupt vector
-;**************************************************************
-
-        org     h'04'
-        goto    int_routine
-
-;**************************************************************
 ; Start of program space
 ;**************************************************************
 
@@ -102,28 +97,6 @@ Init
         movwf   PORTB
 
         return
-;**************************************************************
-; Routine to handle single interrupt.
-;**************************************************************
-
-int_routine
-        movwf   w_temp            ; save off current W register contents
-        movf    STATUS,w          ; move status register into W register
-        movwf   status_temp       ; save off contents of STATUS register
-        movf    PCLATH,w          ; move pclath register into w register
-        movwf   pclath_temp       ; save off contents of PCLATH register
-        ;********************************
-        ; Your interrupt code goes HERE
-        ;********************************
-        movf    pclath_temp,w     ; retrieve copy of PCLATH register
-        movwf   PCLATH            ; restore pre-isr PCLATH register contents
-        movf    status_temp,w     ; retrieve copy of STATUS register
-        movwf   STATUS            ; restore pre-isr STATUS register contents
-        swapf   w_temp,f
-        swapf   w_temp,w          ; restore pre-isr W register contents
-        retfie
-
-
 
 ;**************************************************************
 ; Wait for 20 microseconds, this is the acquisition time for ADC
@@ -243,7 +216,7 @@ set_leds_prepare_speaker:
 ;**************************************************************
 ; Select the appropriate speaker PWM frequency based on the
 ; counter previously set by set_leds_prepare_speaker.
-; The counter value is XOR'd with 0 - 8 to check it's value.
+; The counter value is XOR'd with 0 - 7 to check it's value.
 ; *************************************************************
 ; Inputs: pwm_counter
 ;**************************************************************
