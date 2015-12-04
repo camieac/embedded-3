@@ -20,7 +20,7 @@ __CONFIG _CP_OFF & _WDT_OFF & _BODEN_OFF & _PWRTE_ON & _HS_OSC & _WRT_OFF & _LVP
 ;
 ; Description
 ;    - The higher the light level, the higher the speaker frequency.
-;    - The higher the ligh level, the more LEDs are on.
+;    - The higher the light level, the more LEDs are on.
 ;
 ; Method
 ;    1. Read ADC value
@@ -84,13 +84,13 @@ Init
         movwf   ADCON1
 
         movlw   b'111111'
-        movwf   TRISA              ; set port A
+        movwf   TRISA
         movlw   b'00000000'
-        movwf   TRISB              ; set port B
+        movwf   TRISB
         movlw   b'00000000'
-        movwf   TRISC              ; set port C
+        movwf   TRISC
         movlw   b'11111111'
-        movwf   TRISD              ; set port D
+        movwf   TRISD
 
 
         bcf     STATUS, RP0        ; back to page 0 register set
@@ -383,7 +383,7 @@ pwm7:
         bsf      STATUS,       RP0
         movlw    b'00011101'
         movwf    PR2
-        bcf      STATUS,      RP0
+        bcf      STATUS,       RP0
         movlw    b'00000111'
         movwf    T2CON
         movlw    b'00001110'
