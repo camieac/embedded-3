@@ -263,12 +263,18 @@ set_pwm_frequency:
         btfsc   STATUS,       2
         call    pwm8
 
+        movlw   d'8'
+        xorwf   pwm_counter,  0
+        btfsc   STATUS,       2
+        call    pwm9
+
         return
 
 ;**************************************************************
 ; Routines to set the PWM frequency of the PWM submodule.
 ; Values are calculated using:
 ; http://www.micro-examples.com/public/microex-navig/doc/097-pwm-calculator.html
+; 9 different frequencies are used, representing 0 to 8 LEDs being on.
 ;**************************************************************
 
 ; 290Hz
@@ -365,7 +371,7 @@ pwm7:
         movwf    CCP1CON
 return
 
-; 2400Hz
+; 2200Hz
 pwm8:
         bsf      STATUS,       RP0
         movlw    b'00011001'
@@ -374,6 +380,20 @@ pwm8:
         movlw    b'00000111'
         movwf    T2CON
         movlw    b'00001100'
+        movwf    CCPR1L
+        movlw    b'00111100'
+        movwf    CCP1CON
+return
+
+; 2400Hz
+pwm9:
+        bsf      STATUS,       RP0
+        movlw    b'01110001'
+        movwf    PR2
+        bcf      STATUS,       RP0
+        movlw    b'00000101'
+        movwf    T2CON
+        movlw    b'00111000'
         movwf    CCPR1L
         movlw    b'00111100'
         movwf    CCP1CON
