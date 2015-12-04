@@ -374,20 +374,6 @@ return
 ; 2200Hz
 pwm8:
         bsf      STATUS,       RP0
-        movlw    b'00011001'
-        movwf    PR2
-        bcf      STATUS,       RP0
-        movlw    b'00000111'
-        movwf    T2CON
-        movlw    b'00001100'
-        movwf    CCPR1L
-        movlw    b'00111100'
-        movwf    CCP1CON
-return
-
-; 2400Hz
-pwm9:
-        bsf      STATUS,       RP0
         movlw    b'01110001'
         movwf    PR2
         bcf      STATUS,       RP0
@@ -399,6 +385,19 @@ pwm9:
         movwf    CCP1CON
 return
 
+; 2400Hz
+pwm9:
+        bsf      STATUS,       RP0
+        movlw    b'00011001'
+        movwf    PR2
+        bcf      STATUS,       RP0
+        movlw    b'00000111'
+        movwf    T2CON
+        movlw    b'00001100'
+        movwf    CCPR1L
+        movlw    b'00111100'
+        movwf    CCP1CON
+return
 
 
 ;**************************************************************
