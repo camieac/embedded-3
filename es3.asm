@@ -2,24 +2,33 @@ title     "Assignment3: ADC and PWM interfacing."
 list      p=16f877a
 include   "p16f877a.inc"
 
+;**************************************************************
+; '__CONFIG' directive is used to embed configuration
+; data within .asm file. The labels following the directive
+; are located in the respective .inc file. See respective
+; data sheet for additional information on configuration word.
+; Remember there are TWO underscore characters before the
+; word CONFIG.
+;**************************************************************
+
 __CONFIG _CP_OFF & _WDT_OFF & _BODEN_OFF & _PWRTE_ON & _HS_OSC & _WRT_OFF & _LVP_OFF & _CPD_OFF
 
-; '__CONFIG' directive is used to embed configuration data within .asm file.
-; The labels following the directive are located in the respective .inc file.
-; See respective data sheet for additional information on configuration word.
-; Remember there are TWO underscore characters before the word CONFIG.
-
-;*******************************************************************
-;
-;  es3.asm  ::   Generate LED bar and speaker frequency based on LDR value.
-;  ===================================
+;**************************************************************
+; Title
+;    es3.asm
+;    Generate LED bar and speaker frequency based on LDR value.
 ;
 ; Description
-;    ..............................................
-;
+;    - The higher the light level, the higher the speaker frequency.
+;    - The higher the ligh level, the more LEDs are on.
 ;
 ; Method
-;    ................................................
+;    1. Read ADC value
+;    2. Compare result with literals to turn on LEDs based
+;       on light level detected by LDR.
+;    3. If button is pressed, set PWM frequency depending
+;       on the number of LEDs turned on.
+;    4. Goto 1
 ;
 ; Version
 ;    Cameron Craig   V2.0    December 2015
@@ -27,14 +36,7 @@ __CONFIG _CP_OFF & _WDT_OFF & _BODEN_OFF & _PWRTE_ON & _HS_OSC & _WRT_OFF & _LVP
 ; History
 ;    V1.0 3/12/2015
 ;    V2.0 4/12/2015
-;
-;*******************************************************************
-;*******************************************************************
-;
-
-
-
-
+;**************************************************************
 
 ;**************************************************************
 ; Variable declarations
