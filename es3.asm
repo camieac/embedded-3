@@ -301,14 +301,14 @@ set_pwm_frequency:
 ; 290Hz
 pwm1:
         bsf      STATUS,       RP0
-        movlw    b'11010111'
+        movlw    b'11001000'
         movwf    PR2
         bcf      STATUS,       RP0
         movlw    b'00000111'
         movwf    T2CON
-        movlw    b'01101011'
+        movlw    b'01100100'
         movwf    CCPR1L
-        movlw    b'00111100'
+        movlw    b'00011100'
         movwf    CCP1CON
 return
 
@@ -322,7 +322,7 @@ pwm2:
         movwf    T2CON
         movlw    b'00110100'
         movwf    CCPR1L
-        movlw    b'00111100'
+        movlw    b'00011100'
         movwf    CCP1CON
 return
 ; 890Hz
@@ -431,7 +431,8 @@ ldr_loop:
     ;If the switch is pressed, set speaker PWM frequency.
     btfsc   PORTA,1
     call    set_pwm_frequency
-
+    btfss   PORTA,1
+    clrf    CCP1CON
     ;Repeat forever
     goto ldr_loop
 
