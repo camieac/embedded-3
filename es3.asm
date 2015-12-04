@@ -45,7 +45,7 @@ counter10us             equ             h'20'
         status_temp     equ     h'7E'           ; variable used for context saving
         pclath_temp     equ     h'7F'           ; variable used for context saving
 
-        speaker_frequency_counter     equ     h'22'
+        pwm_counter     equ     h'22'
 
 ;
 ;*******************************************************************
@@ -117,9 +117,9 @@ int_routine
         movwf   status_temp       ; save off contents of STATUS register
         movf    PCLATH,w          ; move pclath register into w register
         movwf   pclath_temp       ; save off contents of PCLATH register
-;
+;********************************
 ; Your interrupt code goes HERE
-;
+;********************************
         movf    pclath_temp,w     ; retrieve copy of PCLATH register
         movwf   PCLATH            ; restore pre-isr PCLATH register contents
         movf    status_temp,w     ; retrieve copy of STATUS register
@@ -139,8 +139,8 @@ delay20us:
         movlw D'6'
         movwf counter10us
         loop20us:
-            decfsz counter10us,1
-            goto loop20us
+            decfsz  counter10us, 1
+            goto    loop20us
         return
 
 ;**************************************************************
@@ -148,8 +148,8 @@ delay20us:
 ; module is complete.
 ;**************************************************************
 poll_adc
-        btfsc ADCON0,2
-        goto poll_adc
+        btfsc ADCON0,   2
+        goto  poll_adc
 return
 
 ;**************************************************************
@@ -160,90 +160,90 @@ return
 ; The PWM counter is then set to a value between 0 and 8, which
 ; is later used to work out the speaker frequency.
 ; *************************************************************
-; Outputs: speaker_frequency_counter
+; Outputs: pwm_counter
 ;**************************************************************
 
 set_leds_prepare_speaker:
         ;Clear the pwm value counter
-        clrf speaker_frequency_counter
+        clrf    pwm_counter
 
-        movf ADRESH, w
-        addlw d'227'
-        btfss STATUS, 0
-        bcf PORTB, 0
-        btfsc STATUS, 0
-        bsf PORTB, 0
-        btfsc STATUS, 0
-        incf speaker_frequency_counter, 1
-
-
-        movf ADRESH, w
-        addlw d'199'
-        btfss STATUS, 0
-        bcf PORTB, 1
-        btfsc STATUS, 0
-        bsf PORTB, 1
-        btfsc STATUS, 0
-        incf speaker_frequency_counter, 1
+        movf    ADRESH,      w
+        addlw   d'227'
+        btfss   STATUS,      0
+        bcf     PORTB,       0
+        btfsc   STATUS,      0
+        bsf     PORTB,       0
+        btfsc   STATUS,      0
+        incf    pwm_counter, 1
 
 
-        movf ADRESH, w
-        addlw d'171'
-        btfss STATUS, 0
-        bcf PORTB, 2
-        btfsc STATUS, 0
-        bsf PORTB, 2
-        btfsc STATUS, 0
-        incf speaker_frequency_counter, 1
-
-        movf ADRESH, w
-        addlw d'143'
-        btfss  STATUS, 0
-        bcf PORTB, 3
-        btfsc STATUS, 0
-        bsf PORTB, 3
-        btfsc STATUS, 0
-        incf speaker_frequency_counter, 1
+        movf    ADRESH,      w
+        addlw   d'199'
+        btfss   STATUS,      0
+        bcf     PORTB,       1
+        btfsc   STATUS,      0
+        bsf     PORTB,       1
+        btfsc   STATUS,      0
+        incf    pwm_counter, 1
 
 
-        movf ADRESH, w
-        addlw d'115'
-        btfss STATUS, 0
-        bcf PORTB, 4
-        btfsc STATUS, 0
-        bsf PORTB, 4
-        btfsc STATUS, 0
-        incf speaker_frequency_counter, 1
+        movf    ADRESH,      w
+        addlw   d'171'
+        btfss   STATUS,      0
+        bcf     PORTB,       2
+        btfsc   STATUS,      0
+        bsf     PORTB,       2
+        btfsc   STATUS,      0
+        incf    pwm_counter, 1
 
-        movf ADRESH, w
-        addlw d'87'
-        btfss STATUS, 0
-        bcf PORTB, 5
-        btfsc STATUS, 0
-        bsf PORTB, 5
-        btfsc STATUS, 0
-        incf speaker_frequency_counter, 1
+        movf    ADRESH,      w
+        addlw   d'143'
+        btfss   STATUS,      0
+        bcf     PORTB,       3
+        btfsc   STATUS,      0
+        bsf     PORTB,       3
+        btfsc   STATUS,      0
+        incf    pwm_counter, 1
 
-        movf ADRESH, w
-        addlw d'59'
-        btfss STATUS, 0
-        bcf PORTB, 6
-        btfsc STATUS, 0
-        bsf PORTB, 6
-        btfsc STATUS, 0
-        incf speaker_frequency_counter, 1
 
-        movf ADRESH, w
-        addlw d'31'
-        btfss STATUS, 0
-        bcf PORTB, 7
-        btfsc STATUS, 0
-        bsf PORTB, 7
-        btfsc STATUS, 0
-        incf speaker_frequency_counter,1
+        movf    ADRESH,      w
+        addlw   d'115'
+        btfss   STATUS,      0
+        bcf     PORTB,       4
+        btfsc   STATUS,      0
+        bsf     PORTB,       4
+        btfsc   STATUS,      0
+        incf    pwm_counter, 1
 
-        btfsc STATUS,0
-        incf speaker_frequency_counter, 1
+        movf    ADRESH,      w
+        addlw   d'87'
+        btfss   STATUS,      0
+        bcf     PORTB,       5
+        btfsc   STATUS,      0
+        bsf     PORTB,       5
+        btfsc   STATUS,      0
+        incf    pwm_counter, 1
+
+        movf    ADRESH,      w
+        addlw   d'59'
+        btfss   STATUS,      0
+        bcf     PORTB,       6
+        btfsc   STATUS,      0
+        bsf     PORTB,       6
+        btfsc   STATUS,      0
+        incf    pwm_counter, 1
+
+        movf    ADRESH,      w
+        addlw   d'31'
+        btfss   STATUS,      0
+        bcf     PORTB,       7
+        btfsc   STATUS,      0
+        bsf     PORTB,       7
+        btfsc   STATUS,      0
+        incf    pwm_counter, 1
+
+        btfsc   STATUS,      0
+        incf    pwm_counter, 1
 
         return
 
@@ -252,209 +252,199 @@ set_leds_prepare_speaker:
 ; counter previously set by set_leds_prepare_speaker.
 ; The counter value is XOR'd with 0 - 8 to check it's value.
 ; *************************************************************
-; Inputs: speaker_frequency_counter
+; Inputs: pwm_counter
 ;**************************************************************
 
 set_pwm_frequency:
 
         movlw   d'0'
-        xorwf   speaker_frequency_counter, 0
-        btfsc   STATUS, 2
+        xorwf   pwm_counter,  0
+        btfsc   STATUS,       2
         call    pwm1
 
         movlw   d'1'
-        xorwf   speaker_frequency_counter, 0
-        btfsc   STATUS, 2
+        xorwf   pwm_counter,  0
+        btfsc   STATUS,       2
         call    pwm2
 
         movlw   d'2'
-        xorwf   speaker_frequency_counter, 0
-        btfsc   STATUS, 2
+        xorwf   pwm_counter,  0
+        btfsc   STATUS,       2
         call    pwm3
 
         movlw   d'3'
-        xorwf   speaker_frequency_counter, 0
-        btfsc   STATUS, 2
+        xorwf   pwm_counter,  0
+        btfsc   STATUS,       2
         call    pwm4
 
         movlw   d'4'
-        xorwf   speaker_frequency_counter, 0
-        btfsc   STATUS, 2
+        xorwf   pwm_counter,  0
+        btfsc   STATUS,       2
         call    pwm5
 
         movlw   d'5'
-        xorwf   speaker_frequency_counter, 0
-        btfsc   STATUS, 2
+        xorwf   pwm_counter,  0
+        btfsc   STATUS,       2
         call    pwm6
 
         movlw   d'6'
-        xorwf   speaker_frequency_counter, 0
-        btfsc   STATUS, 2
+        xorwf   pwm_counter,  0
+        btfsc   STATUS,       2
         call    pwm7
 
         movlw   d'7'
-        xorwf   speaker_frequency_counter, 0
-        btfsc   STATUS, 2
+        xorwf   pwm_counter,  0
+        btfsc   STATUS,       2
         call    pwm8
 
         movlw   d'8'
-        xorwf   speaker_frequency_counter, 0
-        btfsc   STATUS, 2
-        call    pwm9
+        xorwf   pwm_counter,  0
+        btfsc   STATUS,       2
+        call    pwm8
 
         return
 
 ;**************************************************************
 ; Routines to set the PWM frequency of the PWM submodule.
+; Values are calculated using:
+; http://www.micro-examples.com/public/microex-navig/doc/097-pwm-calculator.html
 ;**************************************************************
 
 ; 290Hz
 pwm1:
-        bsf STATUS, RP0				;bank switch to 1 for PR2
-        movlw b'11010111'
-        movwf	PR2
-        bcf STATUS, RP0				;bank switch to 0 for the rest of it
-        movlw b'00000111'
-        movwf	T2CON
-        movlw b'01101011'
-        movwf	CCPR1L
-        movlw b'00111100'
-        movwf	CCP1CON
+        bsf      STATUS,       RP0
+        movlw    b'11010111'
+        movwf    PR2
+        bcf      STATUS,       RP0
+        movlw    b'00000111'
+        movwf    T2CON
+        movlw    b'01101011'
+        movwf    CCPR1L
+        movlw    b'00111100'
+        movwf    CCP1CON
 return
 
 ; 590Hz
 pwm2:
-        bsf STATUS, RP0
-        movlw b'01101001'
-        movwf	PR2
-        bcf STATUS, RP0
-        movlw b'00000111'
-        movwf	T2CON
-        movlw b'00110100'
-        movwf	CCPR1L
-        movlw b'00111100'
-        movwf	CCP1CON
+        bsf      STATUS,       RP0
+        movlw    b'01101001'
+        movwf    PR2
+        bcf      STATUS,       RP0
+        movlw    b'00000111'
+        movwf    T2CON
+        movlw    b'00110100'
+        movwf    CCPR1L
+        movlw    b'00111100'
+        movwf    CCP1CON
 return
 ; 890Hz
 pwm3:
-        bsf STATUS, RP0
-        movlw b'01000101'
-        movwf	PR2
-        bcf STATUS, RP0
-        movlw b'00000111'
-        movwf	T2CON
-        movlw b'00100010'
-        movwf	CCPR1L
-        movlw b'00111100'
-        movwf	CCP1CON
+        bsf      STATUS,       RP0
+        movlw    b'01000101'
+        movwf    PR2
+        bcf      STATUS,       RP0
+        movlw    b'00000111'
+        movwf    T2CON
+        movlw    b'00100010'
+        movwf    CCPR1L
+        movlw    b'00111100'
+        movwf    CCP1CON
 return
 ; 1190Hz
 pwm4:
-        bsf STATUS, RP0
-        movlw b'00110100'
-        movwf	PR2
-        bcf STATUS, RP0
-        movlw b'00000111'
-        movwf	T2CON
-        movlw b'00011010'
-        movwf	CCPR1L
-        movlw b'00011100'
-        movwf	CCP1CON
+        bsf      STATUS,       RP0
+        movlw    b'00110100'
+        movwf    PR2
+        bcf      STATUS,       RP0
+        movlw    b'00000111'
+        movwf    T2CON
+        movlw    b'00011010'
+        movwf    CCPR1L
+        movlw    b'00011100'
+        movwf    CCP1CON
 return
 ; 1490Hz
 pwm5:
-        bsf STATUS, RP0
-        movlw b'00101001'
-        movwf	PR2
-        bcf STATUS, RP0
-        movlw b'00000111'
-        movwf	T2CON
-        movlw b'00010100'
-        movwf	CCPR1L
-        movlw b'00111100'
-        movwf	CCP1CON
+        bsf      STATUS,       RP0
+        movlw    b'00101001'
+        movwf    PR2
+        bcf      STATUS,       RP0
+        movlw    b'00000111'
+        movwf    T2CON
+        movlw    b'00010100'
+        movwf    CCPR1L
+        movlw    b'00111100'
+        movwf    CCP1CON
 return
 ; 1790Hz
 pwm6:
-        bsf STATUS, RP0
-        movlw b'00100010'
-        movwf	PR2
-        bcf STATUS, RP0
-        movlw b'00000111'
-        movwf	T2CON
-        movlw b'00010001'
-        movwf	CCPR1L
-        movlw b'00011100'
-        movwf	CCP1CON
+        bsf      STATUS,       RP0
+        movlw    b'00100010'
+        movwf    PR2
+        bcf      STATUS,       RP0
+        movlw    b'00000111'
+        movwf    T2CON
+        movlw    b'00010001'
+        movwf    CCPR1L
+        movlw    b'00011100'
+        movwf    CCP1CON
 return
 
 ; 2090Hz
 pwm7:
-        bsf STATUS, RP0
-        movlw b'00011101'
-        movwf	PR2
-        bcf STATUS, RP0
-        movlw b'00000111'
-        movwf	T2CON
-        movlw b'00001110'
-        movwf	CCPR1L
-        movlw b'00111100'
-        movwf	CCP1CON
-return
-; 2400Hz
-pwm8:
-        bsf STATUS, RP0
-        movlw b'00011001'
-        movwf	PR2
-        bcf STATUS, RP0
-        movlw b'00000111'
-        movwf	T2CON
-        movlw b'00001100'
-        movwf	CCPR1L
-        movlw b'00111100'
-        movwf	CCP1CON
-return
-; 2400Hz
-pwm9:
-   bsf STATUS, RP0
-   movlw b'00001011'
-   movfw PR2
-   bcf STATUS, RP0
-   movlw b'00000111'
-   movwf T2CON
-   movlw b'00000101'
-   movwf CCPR1L
-   movlw b'00111100'
-   movwf CCP1CON
+        bsf      STATUS,       RP0
+        movlw    b'00011101'
+        movwf    PR2
+        bcf      STATUS,      RP0
+        movlw    b'00000111'
+        movwf    T2CON
+        movlw    b'00001110'
+        movwf    CCPR1L
+        movlw    b'00111100'
+        movwf    CCP1CON
 return
 
+; 2400Hz
+pwm8:
+        bsf      STATUS,       RP0
+        movlw    b'00011001'
+        movwf    PR2
+        bcf      STATUS,       RP0
+        movlw    b'00000111'
+        movwf    T2CON
+        movlw    b'00001100'
+        movwf    CCPR1L
+        movlw    b'00111100'
+        movwf    CCP1CON
+return
+
+
+
 ;**************************************************************
-;
-;
+; Main routine
+;**************************************************************
+
 start
     call    Init
 
 ldr_loop:
-    ;
+    ;Delay to allow holding capacitor enough time to charge.
     call delay20us
 
+    ;Start the ADC read
     bsf  ADCON0,2
 
+    ;Wait until the ADC read is complete
     call poll_adc
 
-
+    ;Set the leds and prepare set frequency counter.
     call set_leds_prepare_speaker
 
+    ;If the switch is pressed, set speaker PWM frequency.
     btfsc   PORTA,1
     call    set_pwm_frequency
 
+    ;Repeat forever
+    goto ldr_loop
 
-goto ldr_loop
-
-;
-;
-;*******************************************************************
-;
-; Program complete.
-;
-        END
+    END
